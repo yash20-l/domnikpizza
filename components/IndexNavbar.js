@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 import { useEffect, useRef, useState } from 'react';
 import { Link, animateScroll as scroll } from "react-scroll";
 import { HiOutlineMenuAlt3 } from "react-icons/hi"
-const Navbar = () => {
+const IndexNavbar = () => {
 
     const Menuref = useRef(null);
     const Hiddenref = useRef(null);
@@ -35,7 +35,7 @@ const Navbar = () => {
             <div className="contents-wrapper px-2  w-full h-full md:flex-row flex items-center justify-around">
                 <div className="brand">
                     {/* <Image src="/skyking.png" height={60} width={100} alt=""></Image> */}
-                    <Image src={'/images/slice.png'} height={30} width={30}></Image>
+                    <Image src={'/images/logo.png'} height={40} width={40}></Image>
                 </div>
                 <div className="MenuWrapper hidden md:flex-row md:flex items-center justify-between">
                     <div className="menu hidden  md:block">
@@ -69,4 +69,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar
+export default IndexNavbar
