@@ -1,15 +1,37 @@
-import React from 'react'
+import {React, useEffect, useState} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { actionCreators } from '../state/index'
+import { bindActionCreators } from 'redux'
 
 const Basket = () => {
+
+    const dispatch = useDispatch()
+    const allActionCreators = bindActionCreators(actionCreators, dispatch)
+    const [basketItems, setBasketItems] = useState([])
+    const item = useSelector(state => state.basketitem);
+
+    useEffect(() => {
+        setBasketItems(item)
+      }, [item])
+    
+
+
   return (
-    <div className='hidden md:bg-white md:block md:h-screen md:fixed md:top-0 md:w-1/4'>
+    <div className='hidden lg:bg-white lg:block lg:h-screen lg:fixed lg:top-0 lg:w-1/4'>
         <div className="orders h-1/2">
         <div className="heading h-24 flex flex-col align-center justify-center">
             <h1 className='text-2xl font-bold text-center text-gray-700'>Your Basket</h1>
         </div>
-        <div className="para px-4 mt-8">
+        {basketItems.length == 0 ? (<div className="para px-4 mt-8">
             <p className='capitalize text-sm'>Your basket looks like empty. add some items in it...</p>
-        </div>
+        </div>) : (
+            basketItems.map((items) => {
+                return (
+                    <h1>{items.title}</h1>
+                )
+            })
+        ) }
+        
         </div>
 
         <div className="checkout h-1/2 flex flex-col items-center justify-end">

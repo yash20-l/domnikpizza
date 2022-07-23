@@ -1,7 +1,7 @@
 const pizzaDroplet = require("../../database/Models");
 
 export default function handler(req, res) {
-    const addpizza = pizzaDroplet({title : "Corn", price : 250, desc : "corn pizza with cheese", veg : true});
+    const addpizza = pizzaDroplet({title : "Onion", price : 250, desc : "corn pizza with cheese", veg : true});
     addpizza.save((err) => {
         console.log(err);
     })

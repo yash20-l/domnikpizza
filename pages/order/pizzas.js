@@ -2,14 +2,24 @@ import { React, useEffect, useState } from 'react'
 import DealsNavbar from '../../components/DealsNavbar'
 import Basket from '../../components/Basket'
 import Image from "next/image"
+import { useSelector, useDispatch } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { actionCreators } from '../../state/index'
+
 
 const pizzas = () => {
 
+  const dispatch = useDispatch();
+
+  const {depositMoney, withdrawMoney, addItem} = bindActionCreators(actionCreators, dispatch)
+
+  const item = useSelector(state => state.basketitem);
   const [pizza, setPizza] = useState(null);
   const [loading, setLoading] = useState(true);
 
+
   const fetchPizza = () => {
-    fetch('http://192.168.1.6:3000/api/fetchpizza').then((res) => {
+    fetch('http://192.168.1.8:3000/api/fetchpizza').then((res) => {
       res.json().then((actualdata) => {
         setPizza(actualdata)
         setLoading(false)
@@ -20,16 +30,23 @@ const pizzas = () => {
     })
   }
 
+  const onButtonClick = (data) => {
+    addItem({title : data.title, price : data.price})
+    document.getElementById('popup').classList.toggle('hidden')
+    setTimeout(() => {
+      document.getElementById('popup').classList.toggle('hidden')
+    }, 3000);
+  }
   useEffect(() => {
-    fetchPizza()
-  }, [])
+    fetchPizza();
+  }, [item])
 
   return (
     <div className={loading ? 'bg-white' : 'bg-gray-200'}>
       <div className="navbarWrapper flex flex-row">
-        <div className="part1 w-full md:w-3/4">
+        <div className="part1 w-full lg:w-3/4">
           <DealsNavbar active="pizzas"></DealsNavbar>
-          <div className={loading ? "" : "grid-cols-1 w-full pizzaSection px-4 py-4 md:grid-cols-3 gap-4 grid "}>
+          <div className={loading ? "" : "grid-cols-1 w-full pizzaSection px-4 py-4 md:grid-cols-2 lg:grid-cols-3 gap-4 grid "}>
             {
               loading ? <>
                 <div className="imageholder flex flex-col items-center justify-center" style={{ height: '70vh' }}>
@@ -38,8 +55,8 @@ const pizzas = () => {
               </> :
                 pizza.map((data) => {
                   return (
-                    <div className="box bg-white mb-4" key={data._id}>
-                      <div className="image h-60 md:h-40" style={{ backgroundImage: "url('/pizzas/1.jpg')", backgroundSize: "cover" }}></div>
+                    <div className="box bg-white drop-shadow-md rounded mb-4" key={data._id}>
+                      <div className="image rounded h-60 md:h-40" style={{ backgroundImage: "url('/pizzas/1.jpg')", backgroundSize: "cover" }}></div>
                       <div className="heading py-4 px-2 flex flex-row justify-start">
                         <div className="title">
                           <h1 className='text-xl select-none font-bold typography-4'>{data.title}</h1>
@@ -67,7 +84,7 @@ const pizzas = () => {
 
                       </div>
                       <div className="buttonc px-2 py-2 w-full">
-                        <button className='w-full p-2 flex flex-row items-center justify-center bg-green-600 font-semibold typography-4 rounded text-white'><span className='w-2/3'>Add</span><span className=''>₹ {data.price}</span></button>
+                        <button className='w-full p-2 flex flex-row items-center justify-center bg-green-600 font-semibold typography-4 rounded text-white' onClick={() => {onButtonClick(data)}}><span className='w-2/3'>Add</span><span className=''>₹ {data.price}</span></button>
                       </div>
                     </div>
                   )
@@ -76,8 +93,18 @@ const pizzas = () => {
 
           </div>
         </div>
-        <div className="part2 w-0 hidden md:w-1/4 md: md:relative md:block">
+        <div className="part2 w-0 hidden lg:w-1/4 lg:relative lg:block">
           <Basket></Basket>
+        </div>
+      </div>
+      <div className="popup hidden h-20 px-4 w-full sticky floating bottom-10 lg:hidden" id='popup'>
+        <div className="bg-green-600 rounded-xl flex flex-col items-center justify-center py-4">
+          <div className="heading">
+            <h1 className='text-white font-bold text-xl'>Great Job !</h1>
+          </div>
+          <div className="para">
+            <p className='text-white'>Item Was Added To Your Cart</p>
+          </div>
         </div>
       </div>
     </div>
